@@ -1,0 +1,5 @@
+// ingoner the node_modules
+// ignore the .env
+
+.env 
+node_modules
