@@ -6,6 +6,7 @@ const duffel = new Duffel({
 });
 
 export async function createUniqueDestinationOfferRequest(request, reply) {
+  console.log("naan din zebi")
   // Accessing parameters from request body instead of query
   const {
     startDate,
