@@ -3,6 +3,7 @@ import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import { duffleRoutes } from './routes/duffleRoutes.js';
 import dotenv from 'dotenv';
+import { amadeusRoutes } from './routes/amadeusRoutes.js';
 
 // Instantiate Fastify with logger enabled
 const fastify = Fastify({
@@ -23,6 +24,8 @@ fastify.register(fastifyCors, {
 
 // Register your routes
 fastify.register(duffleRoutes);
+fastify.register(amadeusRoutes);
+
 
 // Run the server!
 const start = async () => {

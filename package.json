@@ -2,8 +2,10 @@
   "dependencies": {
     "@duffel/api": "^2.8.0",
     "@fastify/cors": "^7.0.0",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.5",
-    "fastify": "^3.3.0" 
+    "fastify": "^3.3.0",
+    "nodemon": "^3.1.0"
   },
   "name": "fastify-apis",
   "version": "1.0.0",
@@ -11,7 +13,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "nodemon": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

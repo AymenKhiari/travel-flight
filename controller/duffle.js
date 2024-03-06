@@ -4,7 +4,6 @@ const duffel = new Duffel({
   token: "duffel_test__mvE8NkTpFEyb1gj6tjLyGOtg7L0pKdcBrkB2D74qdR"
   //token: process.env.SECRET_DUFFLE
 });
-console.log("token",process.env)
 
 export async function createUniqueDestinationOfferRequest(request, reply) {
   // Accessing parameters from request body instead of query
