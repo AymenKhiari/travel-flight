@@ -1,68 +1,80 @@
-import axios from 'axios';
+import Amadeus from 'amadeus';
+
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+
+
+// Create an instance of the Amadeus client
+const amadeus = new Amadeus({
+    clientId: process.env.AMADEUS_CLIENT_ID,
+    clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+  });
 
 export async function getLocations(request, reply) {
-    console.log("zok om hal 3icha");
+  console.log("zok om hal 3icha");
 
-    try {
-        // Check if request.query is defined and has the expected structure
-        const query = request.query;
-        console.log(query);
+  try {
+    // Check if request.query is defined and has the expected structure
+    const query = request.query;
+    console.log(query);
 
-        // Provide default values for static parameters
-        const staticParams = {
-            subType: 'CITY,AIRPORT',
-            offset: '0',
-            limit: '100',
-            sort: 'analytics.travelers.score',
-            view: 'FULL',
-        };
+    // Provide default values for static parameters
+    const staticParams = {
+      subType: 'CITY,AIRPORT',
+      offset: '0',
+      limit: '100',
+      sort: 'analytics.travelers.score',
+      view: 'FULL',
+    };
 
-        // Destructure static parameters
-        const { subType, offset, limit, sort, view } = staticParams;
+    // Destructure static parameters
+    const { subType, offset, limit, sort, view } = staticParams;
 
-        // Make keyword dynamic
-        const keyword = query.keyword || '';
+    // Make keyword dynamic
+    const keyword = query.keyword || '';
 
-        // Construct the URL with query parameters
-        const url = `https://test.api.amadeus.com/v1/reference-data/locations?subType=${subType}&keyword=${keyword}&page%5Blimit%5D=${limit}&page%5Boffset%5D=${offset}&sort=${sort}&view=${view}`;
-        console.log(url);
+    // Construct the parameters object for the Amadeus SDK
+    const params = {
+      subType,
+      keyword,
+      page: { limit, offset },
+      sort,
+      view,
+    };
 
-        // Include authorization headers
-        const accessToken = 'Zgeaptj0bMWojfc39Ag9l2MOGRKM';
+    // Make the API request using the Amadeus SDK
+    const response = await amadeus.referenceData.locations.get(params);
 
-        const headers = {
-            'Authorization': `Bearer ${accessToken}`,
-        };
+    const responseData = response.data;
 
-        // Make the API request using Axios
-        const response = await axios.get(url, { headers });
+    // Create a Set to store unique iata values
+    const uniqueIatas = new Set();
 
-        const responseData = response.data.data;
+    // Create the array of formatted response objects
+    const formattedResponses = responseData.reduce((uniqueFormattedResponses, item) => {
+      const formattedItem = {
+        name: `${item.address.countryName}, ${item.address.cityName}`,
+        iata: item.iataCode,
+      };
 
-        // Create a Set to store unique iata values
-        const uniqueIatas = new Set();
+      // Check if the iata code is unique, and add it to the array and set if it is
+      if (!uniqueIatas.has(formattedItem.iata)) {
+        console.log(formattedItem.iata);
+        uniqueIatas.add(formattedItem.iata);
+        uniqueFormattedResponses.push(formattedItem);
+      }
 
-        // Create the array of formatted response objects
-        const formattedResponses = responseData.reduce((uniqueFormattedResponses, item) => {
-            const formattedItem = {
-                name: `${item.address.countryName}, ${item.address.cityName}`,
-                iata: item.iataCode,
-            };
+      return uniqueFormattedResponses;
+    }, []);
 
-            // Check if the iata code is unique, and add it to the array and set if it is
-            if (!uniqueIatas.has(formattedItem.iata)) {
-                uniqueIatas.add(formattedItem.iata);
-                uniqueFormattedResponses.push(formattedItem);
-            }
-
-            return uniqueFormattedResponses;
-        }, []);
-
-        // Return the formatted response
-        return formattedResponses;
-    } catch (error) {
-        // Handle errors here
-        console.error('Error:', error.message);
-        throw new Error('Internal Server Error');
-    }
+    // Return the formatted response
+    return formattedResponses;
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error.message);
+    throw new Error('Internal Server Error');
+  }
 }

@@ -1,7 +1,11 @@
 import { Duffel } from '@duffel/api';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 const duffel = new Duffel({
-  token: "duffel_test__mvE8NkTpFEyb1gj6tjLyGOtg7L0pKdcBrkB2D74qdR"
+  token: process.env.SECRET_DUFFLE
   //token: process.env.SECRET_DUFFLE
 });
 
