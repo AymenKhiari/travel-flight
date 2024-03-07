@@ -23,7 +23,7 @@ export async function getLocations(request, reply) {
 
     // Provide default values for static parameters
     const staticParams = {
-      subType: 'CITY,AIRPORT',
+      subType: 'AIRPORT',
       offset: '0',
       limit: '100',
       sort: 'analytics.travelers.score',
@@ -56,7 +56,7 @@ export async function getLocations(request, reply) {
     // Create the array of formatted response objects
     const formattedResponses = responseData.reduce((uniqueFormattedResponses, item) => {
       const formattedItem = {
-        name: `${item.address.countryName}, ${item.address.cityName}`,
+        name: `${item.address.countryName}, ${item.address.cityName} ,${item.name}`,
         iata: item.iataCode,
       };
 

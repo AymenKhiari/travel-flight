@@ -59,7 +59,7 @@ export async function createUniqueDestinationOfferRequest(request, reply) {
       passengers: [{ type: passengerTypeLower }],
       cabin_class: cabinClassLower,
       sort_by: "total_amount",
-      limit: 20
+      limit: 50
     });
     const queryResult = offerRequest.data.offers;
   
